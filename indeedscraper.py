@@ -1,32 +1,15 @@
 import asyncio
 import csv
 from pyppeteer import launch
-import datetime
+from utilities import create_file, filename, format_text, is_english
 
-def create_file():
-    try:
-        today = datetime.date.today()
-        global filename
-        filename = f'{today}-jobs.csv'
-        with open(filename, 'x', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(['Title', 'Description'])
-    except FileExistsError:
-        pass
-
-def format_text(input_text):
-    formatted_text = input_text.replace('"', "'")
-    formatted_text = formatted_text.replace("\n", " ")
-    formatted_text = formatted_text.strip()
-    return formatted_text
-
-async def scrape_indeed():
+async def scrape_indeed(job_titles):
+    create_file()
     browser = None
     try:
         browser = await launch(executablePath='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', headless=False)
         page = await browser.newPage()
-        job_titles = ['active+directory', 'network+engineer', 'helpdesk', 'system+administrator']
-        result_pages = [0, 10]
+        result_pages = [0, 10, 20, 30]
         for job_title in job_titles:
             for result_page in result_pages:
                 try:
@@ -38,8 +21,7 @@ async def scrape_indeed():
                         print(f"Found {len(job_listings)} jobs")
                     else:
                         print("Job listings empty")
-                    first_two_jobs = job_listings[:2]
-                    for job in first_two_jobs:
+                    for job in job_listings:
                         try:
                             button_selector = '[aria-label="sluiten"]'
                             button = await page.querySelector(button_selector)
@@ -47,16 +29,14 @@ async def scrape_indeed():
                                 await button.click()
                             await job.click({'button': 'left'})
                             await asyncio.sleep(3)
-                            title_element = await page.querySelector('[data-testid="jobsearch-JobInfoHeader-title"]')
-                            title = await page.evaluate('(element) => element.innerText', title_element)
                             description_element = await page.querySelector('div#jobDescriptionText')
                             description = await page.evaluate('(element) => element.innerText', description_element)
                             formatted_description = format_text(description)
                             with open(filename, 'a', newline='', encoding='utf-8') as file:
                                 writer = csv.writer(file)
-                                writer.writerow([title, formatted_description])
+                                writer.writerow([formatted_description])
                             await asyncio.sleep(3)
-                            print(f"Added {title} to file")
+                            print(f"Added job to file")
                         except Exception as e:
                             print(f"Failed to process job: {str(e)}")
                             with open(filename, 'a', newline='', encoding='utf-8') as file:
@@ -72,8 +52,8 @@ async def scrape_indeed():
             await browser.close()
 
 if __name__ == '__main__':
-    create_file()
-    asyncio.run(scrape_indeed())
+    job_titles = ['network engineer']
+    asyncio.run(scrape_indeed(job_titles))
 
 
 
