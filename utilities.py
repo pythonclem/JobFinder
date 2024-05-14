@@ -16,10 +16,8 @@ def is_english(text):
     
 def create_file():
     try:
-        global filename
-        filename = f'jobs.csv'
+        filename = 'jobs.csv'
         with open(filename, 'x', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
-            writer.writerow(['Title', 'Description'])
     except FileExistsError:
         pass

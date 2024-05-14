@@ -1,7 +1,7 @@
 import asyncio
 import csv
 from pyppeteer import launch
-from utilities import create_file, filename, format_text, is_english
+from utilities import create_file, format_text
 
 async def scrape_indeed(job_titles):
     create_file()
@@ -9,7 +9,7 @@ async def scrape_indeed(job_titles):
     try:
         browser = await launch(executablePath='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', headless=False)
         page = await browser.newPage()
-        result_pages = [0, 10, 20, 30]
+        result_pages = [0, 10, 20]
         for job_title in job_titles:
             for result_page in result_pages:
                 try:
@@ -32,19 +32,19 @@ async def scrape_indeed(job_titles):
                             description_element = await page.querySelector('div#jobDescriptionText')
                             description = await page.evaluate('(element) => element.innerText', description_element)
                             formatted_description = format_text(description)
-                            with open(filename, 'a', newline='', encoding='utf-8') as file:
+                            with open('jobs.csv', 'a', newline='', encoding='utf-8') as file:
                                 writer = csv.writer(file)
-                                writer.writerow([formatted_description])
+                                writer.writerow([job_title, formatted_description])
                             await asyncio.sleep(3)
                             print(f"Added job to file")
                         except Exception as e:
                             print(f"Failed to process job: {str(e)}")
-                            with open(filename, 'a', newline='', encoding='utf-8') as file:
+                            with open('jobs.csv', 'a', newline='', encoding='utf-8') as file:
                                 writer = csv.writer(file)
                                 writer.writerow([job_title, result_page])
                 except Exception as e:
                     print(f"Failed to load page: {str(e)}")
-                    with open(filename, 'a', newline='', encoding='utf-8') as file:
+                    with open('jobs.csv', 'a', newline='', encoding='utf-8') as file:
                         writer = csv.writer(file)
                         writer.writerow([job_title, result_page])
     finally:
