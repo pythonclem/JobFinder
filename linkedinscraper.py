@@ -27,12 +27,12 @@ async def scrape_linkedin(job_titles):
                 await asyncio.sleep(2)
                 await page.keyboard.press('Enter')
                 await asyncio.sleep(3)
-                # await page.click('button[id="searchFilter_timePostedRange"]')
-                # await asyncio.sleep(1)
-                # await page.click('input[id="timePostedRange-r86400"]')
-                # await asyncio.sleep(1)
-                # await page.click('button[aria-label^="Apply current filter to show"]')
-                # await asyncio.sleep(3)
+                await page.click('button[id="searchFilter_timePostedRange"]')
+                await asyncio.sleep(1)
+                await page.click('input[id="timePostedRange-r86400"]')
+                await asyncio.sleep(1)
+                await page.click('button[aria-label^="Apply current filter to show"]')
+                await asyncio.sleep(3)
                 for page_num in range(2, 4):
                     job_listings = await page.querySelectorAll('.jobs-search-results__list-item')
                     for job in job_listings:
