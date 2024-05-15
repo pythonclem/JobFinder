@@ -31,7 +31,7 @@ def get_fit_score(filename):
         print("Job ranked")
 
 
-def refining_gpt(filename):
+def jobpost_analyzer(filename):
 
   start_time = time.time()
   load_dotenv()
@@ -78,4 +78,4 @@ def refining_gpt(filename):
   print(f"Function executed in {elapsed_time:.2f} seconds")
   print(f"Average time to analyze a job: {elapsed_time / len(rows)}")
 
-refining_gpt("jobs.csv")
+jobpost_analyzer("jobs.csv")

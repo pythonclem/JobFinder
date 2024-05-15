@@ -21,27 +21,34 @@ async def scrape_indeed(job_titles):
                         print(f"Found {len(job_listings)} jobs")
                     else:
                         print("Job listings empty")
+
                     for job in job_listings:
+
                         try:
                             button_selector = '[aria-label="sluiten"]'
                             button = await page.querySelector(button_selector)
+
                             if button:
                                 await button.click()
+
                             await job.click({'button': 'left'})
                             await asyncio.sleep(3)
                             description_element = await page.querySelector('div#jobDescriptionText')
                             description = await page.evaluate('(element) => element.innerText', description_element)
                             formatted_description = format_text(description)
+                            
                             with open('jobs.csv', 'a', newline='', encoding='utf-8') as file:
                                 writer = csv.writer(file)
                                 writer.writerow([job_title, formatted_description])
                             await asyncio.sleep(3)
                             print(f"Added job to file")
+
                         except Exception as e:
                             print(f"Failed to process job: {str(e)}")
                             with open('jobs.csv', 'a', newline='', encoding='utf-8') as file:
                                 writer = csv.writer(file)
                                 writer.writerow([job_title, result_page])
+
                 except Exception as e:
                     print(f"Failed to load page: {str(e)}")
                     with open('jobs.csv', 'a', newline='', encoding='utf-8') as file:
