@@ -9,6 +9,7 @@ async def stealth_test():
         browser = await launch(
             executablePath='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 
             headless=False,
+            userDataDir='C:\\Users\\Clement\\AppData\\Local\\Google\\Chrome\\User Data',
             args=['--profile-directory=Default',
                   '--proxy-server=http://35.234.173.13:3128']
         )
@@ -31,3 +32,5 @@ async def stealth_test():
         await page.goto('https://www.whatismyip.com/')
 
 asyncio.run(stealth_test())
+
+

@@ -24,7 +24,7 @@ async def scrape_linkedin(job_titles):
             languages=["en-US", "en"],
             vendor="Google Inc.",
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
-            locale="en-US,en;q=0.9",
+            locale="en-US,en-NL,en;q=0.9",
             mask_linux=False,
             webgl_vendor="Intel Inc.",
             renderer="Intel Iris OpenGL Engine",
