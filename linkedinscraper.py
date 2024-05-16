@@ -2,6 +2,7 @@ import asyncio
 import csv
 from pyppeteer import launch
 from utilities import create_file, format_text, is_english
+from pyppeteer_stealth import stealth
 
 
 async def scrape_linkedin(job_titles):
@@ -12,10 +13,24 @@ async def scrape_linkedin(job_titles):
             executablePath='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 
             headless=False,
             userDataDir='C:\\Users\\Clement\\AppData\\Local\\Google\\Chrome\\User Data',
-            args=['--profile-directory=Default']
+            args=['--profile-directory=Default',
+                  '--proxy-server=http://35.234.173.13:3128']
         )
         pages = await browser.pages()
         page = pages[-1]
+
+        await stealth(
+            page,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36",
+            locale="en-US,en;q=0.9",
+            mask_linux=False,
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            disabled_evasions=[]
+        )
+
         await page.goto('https://www.linkedin.com/jobs/search/')
         await page.setViewport({'width': 1920, 'height': 1080})
         await asyncio.sleep(3)
